@@ -1,0 +1,20 @@
+apply plugin: 'java-library'
+apply plugin: 'maven'
+apply from: './upload.gradle'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+configurations.all {
+    resolutionStrategy {
+        cacheChangingModulesFor 10, 'seconds'
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"

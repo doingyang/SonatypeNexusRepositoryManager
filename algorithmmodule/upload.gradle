@@ -1,0 +1,45 @@
+apply plugin: 'maven'
+
+def group = 'com.ydy.util'
+def artifact = 'algotithm'
+def type = 'jar'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: MAVEN_URL_RELEASE) {
+                authentication(userName: NEXUS_USERNAME, password: NEXUS_PASSWORD)
+            }
+            snapshotRepository(url: MAVEN_URL_SNAPSHOT) {
+                authentication(userName: NEXUS_USERNAME, password: NEXUS_PASSWORD)
+            }
+            pom.project {
+                version MODULE_VERSION
+                artifactId artifact
+                groupId group
+                packaging type
+                description 'algotithm util'
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+tasks.withType(Javadoc) {
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
